@@ -15,7 +15,7 @@ project("fclient")
 # Gradle automatically packages shared libraries with your APK.
 
 add_library( # Sets the name of the library.
-        fclient
+        native-lib
 
         # Sets the library as a shared library.
         SHARED
@@ -40,32 +40,30 @@ find_library( # Sets the name of the path variable.
 # can link multiple libraries, such as libraries you define in this
 # build script, prebuilt third-party libraries, or system libraries.
 
-target_link_libraries( # Specifies the target library.
-        fclient
-        spdlog
-        mbedcrypto
-        # Links the target library to the log library
-        # included in the NDK.
-        ${log-lib})
 
 add_library(spdlog STATIC IMPORTED
-            mbedcrypto SHARED IMPORTED
         )
-
 set_target_properties(spdlog PROPERTIES IMPORTED_LOCATION
         /home/huy/AndroidStudioProjects/libs/spdlog/build/x86_64/libspdlog.a
-
-        mbedcrypto PROPERTIES IMPORTED_LOCATION
-        /home/huy/AndroidStudioProjects/libs/mbedtls/build/x86_64/library/libmbedcrypto.so
         )
 
+add_library(mbedcrypto SHARED IMPORTED)
+set_target_properties(mbedcrypto PROPERTIES IMPORTED_LOCATION
+        ${CMAKE_CURRENT_SOURCE_DIR}/../nativeLibs/${ANDROID_ABI}/libmbedcrypto.so)
 
-target_include_directories(fclient PUBLIC
+target_include_directories(native-lib PUBLIC
         /home/huy/AndroidStudioProjects/libs/spdlog/spdlog/include
         /home/huy/AndroidStudioProjects/libs/mbedtls/mbedtls/include
         )
 
 
+target_link_libraries( # Specifies the target library.
+        native-lib
+        spdlog
+        mbedcrypto
+        # Links the target library to the log library
+        # included in the NDK.
+        ${log-lib})
 
 
 
