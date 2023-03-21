@@ -24,10 +24,6 @@ public class PinpadActivity extends AppCompatActivity {
 
         ShuffleKeys();
 
-        findViewById(R.id.btnOK).setOnClickListener((View) -> {
-            finish();
-        });
-
         findViewById(R.id.btnReset).setOnClickListener((View) -> {
             pin = "";
             tvPin.setText("");
@@ -70,15 +66,5 @@ public class PinpadActivity extends AppCompatActivity {
             keys[idx].setText(keys[i].getText());
             keys[i].setText(txt);
         }
-    }
-
-    public void onButtonClick(View v) {
-//        Intent it = new Intent(this, PinpadActivity.class);
-//        startActivity(it);
-        Intent it = new Intent(this, PinpadActivity.class);
-        //startActivity(it);
-        ActivityResultLauncher<Intent> activityResultLauncher = null;
-        activityResultLauncher.launch(it);
-
     }
 }

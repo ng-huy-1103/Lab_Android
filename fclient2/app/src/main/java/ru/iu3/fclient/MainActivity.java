@@ -109,7 +109,9 @@ public class MainActivity extends AppCompatActivity {
        String s = new String(Hex.encodeHex(dec)).toUpperCase();
 
         Intent it = new Intent(this, PinpadActivity.class);
-        startActivity(it);
+        // startActivity(it);
+
+        activityResultLauncher.launch(it);
     }
 
 
