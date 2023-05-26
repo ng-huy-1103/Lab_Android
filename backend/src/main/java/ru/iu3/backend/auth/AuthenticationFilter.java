@@ -1,6 +1,7 @@
 package ru.iu3.backend.auth;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -29,9 +30,6 @@ public class AuthenticationFilter extends AbstractAuthenticationProcessingFilter
 
         Enumeration<String> headerNames = httpServletRequest.getHeaderNames();
         String token= httpServletRequest.getHeader(AUTHORIZATION);
-        if (token != null) {
-            token = StringUtils.removeStart(token, "Bearer").trim();
-        }
         Authentication requestAuthentication = new UsernamePasswordAuthenticationToken(token, token);
         return getAuthenticationManager().authenticate(requestAuthentication);
     }

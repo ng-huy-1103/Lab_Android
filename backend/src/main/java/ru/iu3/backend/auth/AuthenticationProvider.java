@@ -16,7 +16,6 @@ import ru.iu3.backend.repositories.UserRepository;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-
 @Component
 public class AuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
 

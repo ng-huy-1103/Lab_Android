@@ -9,9 +9,12 @@ import ru.iu3.backend.models.User;
 import ru.iu3.backend.repositories.UserRepository;
 import ru.iu3.backend.tools.Utils;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/auth")
 public class LoginController {
@@ -32,6 +35,7 @@ public class LoginController {
                 if (hash1.equalsIgnoreCase(hash2)) {
                     String token = UUID.randomUUID().toString();
                     u2.setToken(token);
+                    u2.setActivity(LocalDateTime.now());
                     User u3 = userRepository.saveAndFlush(u2);
                     return new ResponseEntity<Object>(u3, HttpStatus.OK);
                 }
@@ -42,7 +46,6 @@ public class LoginController {
     @GetMapping("/logout")
     public ResponseEntity<Object> logout(@RequestHeader(value = "Authorization", required = false) String token) {
         if (token != null && !token.isEmpty()) {
-            token = StringUtils.removeStart(token, "Bearer").trim();
             Optional<User> uu = userRepository.findByToken(token);
             if (uu.isPresent()) {
                 User u = uu.get();

@@ -74,6 +74,6 @@ public class MuseumController {
         if (optionalPainting.isPresent()) {
             return ResponseEntity.ok(optionalPainting.get().getMuseum().paintings);
         }
-        return ResponseEntity.ok(new ArrayList<>());
+        return ResponseEntity.ok(new ArrayList<Painting>());
     }
 }

@@ -16,6 +16,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/api/v1/countries")
 public class CountryController {
+
     @Autowired
     CountryRepository countryRepository;
 
@@ -73,6 +74,6 @@ public class CountryController {
         if (optionalCountry.isPresent()) {
             return ResponseEntity.ok(optionalCountry.get().artists);
         }
-        return ResponseEntity.ok(new ArrayList<>());
+        return ResponseEntity.ok(new ArrayList<Artist>());
     }
 }
