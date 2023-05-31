@@ -41,8 +41,7 @@ find_library( # Sets the name of the path variable.
 # build script, prebuilt third-party libraries, or system libraries.
 
 
-add_library(spdlog STATIC IMPORTED
-        )
+add_library(spdlog STATIC IMPORTED)
 set_target_properties(spdlog PROPERTIES IMPORTED_LOCATION
         /home/huy/AndroidStudioProjects/libs/spdlog/build/x86_64/libspdlog.a
         )

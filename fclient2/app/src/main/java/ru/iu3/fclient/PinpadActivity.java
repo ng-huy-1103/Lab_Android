@@ -1,8 +1,8 @@
 package ru.iu3.fclient;
 
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -17,24 +17,25 @@ public class PinpadActivity extends AppCompatActivity {
     String pin = "";
     final int MAX_KEYS = 10;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pinpad);
-
         tvPin = findViewById(R.id.txtPin);
 
         ShuffleKeys();
 
-        findViewById(R.id.btnReset).setOnClickListener((View) -> {
-            pin = "";
-            tvPin.setText("");
-        });
         findViewById(R.id.btnOK).setOnClickListener((View) -> {
             Intent it = new Intent();
             it.putExtra("pin", pin);
             setResult(RESULT_OK, it);
             finish();
+        });
+
+        findViewById(R.id.btnReset).setOnClickListener((View) -> {
+            pin = "";
+            tvPin.setText("");
         });
 
         TextView ta = findViewById(R.id.txtAmount);
@@ -50,20 +51,10 @@ public class PinpadActivity extends AppCompatActivity {
             tp.setText("Осталось две попытки");
         else if (pts == 1)
             tp.setText("Осталась одна попытка");
-
     }
 
-    public void keyClick(View v) {
-        String key = ((TextView) v).getText().toString();
-        int sz = pin.length();
-        if (sz < 4) {
-            pin += key;
-            tvPin.setText("****".substring(3 - sz));
-        }
-    }
-
-    protected void ShuffleKeys() {
-        Button keys[] = new Button[]{
+    private void ShuffleKeys() {
+        Button[] keys = new Button[] {
                 findViewById(R.id.btnKey0),
                 findViewById(R.id.btnKey1),
                 findViewById(R.id.btnKey2),
@@ -77,11 +68,22 @@ public class PinpadActivity extends AppCompatActivity {
         };
 
         byte[] rnd = MainActivity.randomBytes(MAX_KEYS);
-        for (int i = 0; i < MAX_KEYS; i++) {
+        for(int i = 0; i < MAX_KEYS; i++)
+        {
             int idx = (rnd[i] & 0xFF) % 10;
             CharSequence txt = keys[idx].getText();
             keys[idx].setText(keys[i].getText());
             keys[i].setText(txt);
+        }
+    }
+    public void keyClick(View v)
+    {
+        String key = ((TextView)v).getText().toString();
+        int sz = pin.length();
+        if (sz < 4)
+        {
+            pin += key;
+            tvPin.setText("****".substring(3 - sz));
         }
     }
 }

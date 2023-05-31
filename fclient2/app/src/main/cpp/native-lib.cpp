@@ -8,14 +8,17 @@
 #include <mbedtls/des.h>
 
 
-mbedtls_entropy_context entropy;
-mbedtls_ctr_drbg_context ctr_drbg;
-char *personalization = "fclient-sample-app";
+
 
 #define LOG_INFO(...) __android_log_print(ANDROID_LOG_INFO, "fclient_ndk", __VA_ARGS__)
 
 #define SLOG_INFO(...) android_logger->info( __VA_ARGS__ )
+
 auto android_logger = spdlog::android_logger_mt("android", "fclient_ndk");
+
+mbedtls_entropy_context entropy;
+mbedtls_ctr_drbg_context ctr_drbg;
+char *personalization = "fclient-sample-app";
 
 //extern "C" JNIEXPORT jstring JNICALL
 //Java_ru_iu3_fclient_MainActivity_stringFromJNI(
@@ -24,8 +27,6 @@ auto android_logger = spdlog::android_logger_mt("android", "fclient_ndk");
 //    std::string hello = "Hello from C++";
 //    return env->NewStringUTF(hello.c_str());
 //}
-
-
 JavaVM* gJvm = nullptr;
 
 JNIEXPORT jint JNICALL JNI_OnLoad (JavaVM* pjvm, void* reserved)

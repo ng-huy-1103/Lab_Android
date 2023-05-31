@@ -1,6 +1,8 @@
 package ru.iu3.backend.controllers;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,21 +12,22 @@ import ru.iu3.backend.models.Painting;
 import ru.iu3.backend.repositories.MuseumRepository;
 import ru.iu3.backend.repositories.PaintingRepository;
 
+import javax.validation.Valid;
 import java.util.*;
-
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/api/v1/museums")
+@RequestMapping("/api/v1")
 public class MuseumController {
     @Autowired
     MuseumRepository museumRepository;
     @Autowired
     PaintingRepository paintingRepository;
-    @GetMapping
-    public List<Museum> getAllMuseums(){
-        return museumRepository.findAll();
+    @GetMapping("/museums")
+    public Page<Museum> getAllMuseums(@RequestParam("page") int page, @RequestParam("limit") int limit) {
+        return museumRepository.findAll(PageRequest.of(page, limit, Sort.by(Sort.Direction.ASC, "name")));
     }
 
-    @PostMapping
+    @PostMapping("/museums")
     public ResponseEntity<Object> createMuseum(@RequestBody Museum requestMuseum) throws Exception{
         try {
             Museum museum = museumRepository.save(requestMuseum);
@@ -40,7 +43,8 @@ public class MuseumController {
         }
     }
 
-    @PutMapping("/{id}")
+
+    @PutMapping("/museums/{id}")
     public ResponseEntity<Object> updateMuseum(@PathVariable("id") Long idMuseum, @RequestBody Museum museumDetails){
         Museum museum;
         Optional<Museum> museumOptional = museumRepository.findById(idMuseum);
@@ -56,19 +60,12 @@ public class MuseumController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteMuseum(@PathVariable("id") Long idMuseum){
-        Optional<Museum> museumOptional = museumRepository.findById(idMuseum);
-        Map<String, Boolean> resp = new HashMap<>();
-        if (museumOptional.isPresent()) {
-            museumRepository.delete(museumOptional.get());
-            resp.put("deleted", Boolean.TRUE);
-        }
-        else resp.put("deleted", Boolean.FALSE);
-        return ResponseEntity.ok(resp);
+    @PostMapping("/deletemuseums")
+    public ResponseEntity<Object> deleteMuseums(@Valid @RequestBody List<Museum> museums) {
+        museumRepository.deleteAll(museums);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
-
-    @GetMapping("/{id}/paintings")
+    @GetMapping("/museums/{id}/paintings")
     public ResponseEntity<List<Painting>> getMuseumPaintings(@PathVariable(value = "id") Long paintingId) {
         Optional<Painting> optionalPainting = paintingRepository.findById(paintingId);
         if (optionalPainting.isPresent()) {
